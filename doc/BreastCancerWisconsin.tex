@@ -1,0 +1,309 @@
+\documentclass[conference]{IEEEtran}
+
+% *** PACKAGES ***
+
+\usepackage[utf8x]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{float}
+\usepackage{cite}
+\usepackage{algorithmic}
+\usepackage{array}
+\usepackage{url}
+\usepackage{amssymb, amsmath}
+\usepackage{graphicx}
+\usepackage{multirow}
+
+% Metadata info
+\usepackage{ifpdf}
+\ifpdf
+	\pdfinfo{
+		/Author (Exequiel Fuentes Lettura)
+		/Title (Estudio comparativo de las tecnicas de clasificacion sobre el cancer de mama)
+		/Keywords (Machine learning, Regresion Lineal, Modelo Rectangular, Cancer de Mama)
+	}
+\fi
+
+\newcommand{\grad}{\hspace{-2mm}$\phantom{a}^{\circ}$}
+
+\begin{document}
+\title{Estudio comparativo de las técnicas de clasificación sobre el cáncer de mama}
+
+\author{\IEEEauthorblockN{Exequiel Fuentes Lettura}
+\IEEEauthorblockA{Universidad Católica del Norte\\
+Departamento en Ingeniería de Sistemas y Computación\\
+Antofagasta, Chile\\
+Email: efulet@gmail.com}
+}
+
+
+% make the title area
+\maketitle
+
+\begin{abstract}
+La detección precisa de células cancerígenas en un paciente es crítica y puede alterar el tratamiento posterior y aumentar las posibilidades de supervivencia. Técnicas de Machine Learning han sido fundamentales para la detección de enfermedades y en la actualidad se están utilizando en varios problemas de clasificación debido a su rendimiento preciso de predicción. Varias técnicas pueden proporcionar diferentes precisiones deseadas por lo que es imprescindible utilizar el método más adecuado que proporcione los mejores resultados deseados. En esta investigación se pretende ofrecer un análisis comparativo entre el modelo de Regresión Lineal y el modelo Rectangular sobre el problema de la clasificación del cáncer de mama de Wisconsin.
+\end{abstract}
+\emph{Palabras clave: Machine learning, Regresion Lineal, Modelo Rectangular, Cáncer de Mama}
+
+\IEEEpeerreviewmaketitle
+
+
+\section{Introducción}
+La utilización de enfoques de Machine Learning en dominios médicos ha aumentado rápida y consistentemente en el tiempo debido a la mejora en la eficacia de estos enfoques en la clasificación, predicción y especialmente en la ayuda en la toma de decisiones. Por otro lado, el aumento en el número de pacientes que requieren atención médica en el marco de evaluaciones periódicas ha llevado al desarrollo técnico de sistemas automatizados, reduciendo el costo de las prestaciones y ayudando en la mejora de los estudios clínicos. \newline
+
+El cambio del perfil epidemiológico de la población junto con el aumento de la esperanza de vida al nacer, ha provocado el aumento de las enfermedades crónicas como el cáncer, constituyendo un importante problema de salud pública en términos de morbi-mortalidad. Es así como, el cáncer ocupa el segundo lugar entre las principales causas de mortalidad en los últimos 30 años. \newline
+
+Las estimaciones a nivel mundial de mortalidad e incidencia por cáncer de mama obtenidas a través de la GLOBOCAN 2008, aparece como primera causa de muerte en la mujer. Esta misma fuente estimó que anualmente fallecen 458.367 mujeres por esta causa, alcanzando una tasa estandarizada por edad de 12,5 por 100.000 mujeres. La tasa de incidencia estandarizada por edad fue estimada en 39 por 100.000 mujeres con un total de 1.383.523 casos nuevos en el mundo~\cite{articule:Prieto2011}. \newline
+
+La detección precoz a través de la mamografía incrementa las opciones  de tratamiento y tiene un efecto demostrado en disminuir la mortalidad. Sin embargo, esta estrategia puede ser de alto costo en países menos desarrollados por lo que la mayoría de los esfuerzos se han hecho en la prevención primaria. Este tipo de cáncer ha venido en descenso en Norteamérica y Europa en los últimos 25 años como resultado de la detección precoz y mejoría en los tratamientos. \newline
+
+La identificación de las células cancerígenas en un paciente es altamente subjetiva y depende de la experiencia del médico. Esto puede conducir a predicciones inexactas puesto que los experimentos son propensos a error humano y visual, que además pueden verse afectados por una mamografía borrosa. Los desafíos mencionados requieren la necesidad de herramientas precisas para detección y clasificación de células cancerígenas. Técnicas de Machine Learning han sido fundamentales para proporcionar pruebas que apoyen la exactitud de la clasificación de los pacientes con cáncer de mama. Una vez que el diagnóstico de cáncer de mama se ha realizado, el pronóstico se determina posteriormente para predecir el desarrollo futuro y las características de las células cancerígenas~\cite{articule:YouRumbe2010}. \newline
+
+En esta investigación se pretende ofrecer un análisis comparativo entre un modelo de Regresión Lineal y un modelo Rectangular, siendo este último desarrollado para esta investigación. Ambos modelos utilizarán un conjunto de datos públicos denominado ``Wisconsin Diagnostic Breast Cancer'', el cual posee 569 instancias de 32 atributos incluyendo su atributo clase correspondiente al diagnóstico (maligno o benigno)~\cite{resource:WDBC1995}. \newline
+
+Este artículo esta organizado de la siguiente manera: materiales y métodos utilizados, resultados obtenidos y conclusiones.
+
+
+\section{Desarrollo}
+
+\subsection{Materiales y métodos utilizados}
+Los conjuntos de datos ``Wisconsin Breast Cancer'' localizados en el repositorio ``UCI Machine Learning''~\cite{resource:WDBC1995} son utilizados para distinguir entre instancias que pueden ser malignas (cancerígena) o benignas (no cancerígena). Para efectos de esta investigación se ha seleccionado el conjunto de datos denominado ``Wisconsin Diagnostic Breast Cancer'' (WDBC), el cual contiene 569 instancias correspondiente a las muestras tomadas a pacientes. \newline
+
+Los detalles de los atributos pueden ser encontrados en el archivo llamado ``wdbc.names'', los cuales son: ``ID number'', ``Diagnosis'' (M = maligno o B = benigno) y 30 valores reales correspondiente a la media, la desviación típica y el ``peor'' o más largo (la media de los tres valores más largos) por cada característica del núcleo de la célula. Este núcleo, que está presente en una imagen digitalizada, tiene las siguientes características: ``Radius'', ``Texture'', ``Perimeter'', ``Area'', ``Smoothness'', ``Compactness'', ``Concavity'', ``Concave points'', ``Symmetry'' y ``Fractal dimension''. Por ejemplo, la columna 3 es la media del radio, la columna 13 es la desviación típica del radio y la columna 23 es el ``peor'' valor del radio. \newline
+
+Para evitar que el atributo ``ID number'' tuviera alguna incidencia sobre la clasificación fue removido ya que no tiene un aporte real al problema. En el caso del atributo clase, ``M'' fue reemplazado por ``1'' y ``B'' por ``0''. \newline
+
+Como estrategia de validación se utilizó el método ``holdout''. Se dividió el conjunto de datos en un 70\% para efecto de entrenamiento y un 30\% para las pruebas de los modelos. \newline
+
+Formalmente, un conjunto de entrenamiento que contiene $N$ instancias puede definirse como $X= \{x^{t},r^{t}\}$, con $t=1,...,N$. Donde $x$ es un atributo de entrada definido como $x=[x_{1},x_{2},...x_{t}]$ y $r$ es el rótulo del atributo el cual se define de manera similar a $x$, entonces $r=[r_{1},r_{2},...r_{t}]$. Lo que se busca es una función $G$, tal que, $G(x)$ prediga un valor basado en $X$. Para este caso en particular, $X$ es de dimensión 30. \newline
+
+Se pueden utilizar varios métodos para examinar la clasificación de este problema. En esta investigación se utilizarán el modelo de Regresión Lineal y el modelo Rectangular. El modelo de Regresión Lineal se encuentra implementado en una gran variedad de lenguajes y herramientas. Por otro lado, el modelo Rectangular no esta disponible, por lo tanto se implementó una solución. El desarrollo de los algoritmos fue realizada en Python. \newline
+
+El modelo de Regresión Lineal es un método matemático que modela la relación entre una variable dependiente $Y$, las variables independientes $X_{i}$ y un término aleatorio $\epsilon$~\cite{book:BishopPRML}. Este modelo puede ser expresado como:
+
+\begin{equation} \label{equation:LinearRegresion}
+	Y_{t} = \beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} + ... + \beta_{p}X_{p} + \epsilon
+\end{equation}
+
+Donde $Y_{t}$ es denominada la variable dependiente, explicada o regresando. $X_{1},X_{2},...X_{p}$ son conocidas como las variables explicativas, independientes o regresores. $\beta_{0},\beta_{1},\beta_{2},...,\beta_{p}$ son parámetros que miden la influencia que las variables explicativas tienen sobre el regresando. $\beta_{0}$ es la intersección o término constante, $\beta_{i} (i>0)$ son los parámetros respectivos a cada variable independiente y $p$ es el número de parámetros independientes a tener en cuenta en la regresión. El problema de la regresión consiste en elegir unos valores determinados para los parámetros desconocidos $\beta_{i}$, de modo que la ecuación quede completamente especificada. No se garantiza que estos valores coincidan exactamente con los parámetros reales del proceso generador. Para un problema de dos clases, se puede visualizar la operación como una partición del espacio de alta dimensionalidad de entrada con un hiperplano, esto es, todos los puntos a un lado del hiperplano son clasificados como ``malignos'', mientras que los demás son clasificados como ``benignos''. \newline
+
+El modelo Rectangular es un método matemático que modela la relación entre la variable de clase $C$ y las variables independientes $X_{i}$~\cite{class:MachineLearning}. Este modelo genera una ecuación:
+
+\begin{equation} \label{equation:RectangularModel}
+	\begin{array}{ccc}
+	H = \alpha_{1} \leq X_{1} \leq \beta_{1} ~and~
+	    \alpha_{2} \leq X_{2} \leq \beta_{2} ~and~ \\
+	    ... ~and~
+	    \alpha_{i} \leq X_{i} \leq \beta_{i} \\
+	\end{array}
+\end{equation}
+
+Donde $H$ se denomida clase (espacio) de hipótesis, $X_{1},X_{2},...X_{i}$ son los atributos de entrada, $\alpha_{i}$ y $\beta_{i}$ son los parámetros de la instancia para un atributo $X_{i}$. Un algoritmo de aprendizaje en este caso encuentra una hipótesis particular $h \in H$, a fin de aproximar $C$ tanto como sea posible. Aunque el experto define la clase de hipótesis $H$, los valores de los parámetros no son conocidos. El algoritmo de aprendizaje debe encontrar los valores de los parámetros que definen una hipótesis particular $h$. Dada una hipótesis $h$, podemos hacer una predicción sobre una entrada $x$, tal que:
+
+\begin{itemize}
+    \item $h(x)= 1$ si $h$ clasifica $x$ como un ejemplo positivo
+    \item $h(x)= 0$ si $h$ clasifica $x$ como un ejemplo negativo \\
+\end{itemize}
+
+Para un problema de dos clases, se puede visualizar la operación como un rectángulo que divide el espacio de alta dimensionalidad de entrada con respecto a los valores de las clases, esto es, todos los puntos dentro del rectángulo son clasificados como ``malignos'', mientras que los demás que están fuera del rectángulo son clasificados como ``benignos''. \newline
+
+Ahora, se debe estimar la capacidad del clasificador para la predicción sobre nuevas instancias. Exiten diversas técnicas para estimar esta capacidad. En esta investigación se calculará la matriz de confusión e indicadores como el error real, error aparente, sensibilidad, especificidad, recall y $F_{\beta}$. \newline
+
+La matriz de confusión es una tabla que muestra la distribución de los errores por las distintas categorías. Para el caso de dos clases, su forma es como la que se muestra en el Cuadro~\ref{table:ConfusionMatrix}.
+
+\begin{table}[H]
+	\caption{Matriz de Confusión}
+	\label{table:ConfusionMatrix}
+	\begin{center}
+		\begin{tabular}{cc|c|c|}
+			\cline{3-4}
+            &  & \multicolumn{2}{c|}{\textbf{Clase verdadera}} \\ \cline{3-4} 
+            &  & \textit{Benigno}   & \textit{Maligno}   \\ \hline
+			\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{Clase predicha}}} & \textit{Benigno} & a                  & b \\ \cline{2-4} 
+			\multicolumn{1}{|c|}{}                                 & \textit{Maligno} & c                  & d \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+Donde $a$ es el número de predicciones correctas para instancias negativas, $b$ es el número de predicciones incorrectas para instancias negativas, $c$ es el número de predicciones incorrectas para instancias positivas y $d$ es el número de predicciones correctas para instancias positivas. \newline
+
+La tasa de error se define como:
+
+\begin{equation} \label{equation:TasaDeError}
+	erate = \frac{\sum error}{N}
+\end{equation}
+
+Donde $N$ es la cantidad de casos. \newline
+
+El error real o tasa de error verdadera se define como la probabilidad de clasificar incorrectamente nuevos casos. Para ello, se utiliza el conjunto de datos de prueba sobre la ecuación~\ref{equation:TasaDeError}. \newline
+
+El error aparente se define como la tasa de error obtenida al clasificar las mismas instancias de entrenamiento. Para ello, se utiliza el conjunto de datos de entrenamiento sobre la ecuación~\ref{equation:TasaDeError}. \newline
+
+La sensibilidad indica la capacidad del clasificador para dar como casos positivos los casos que realmente son positivos, esto es, la proporción de positivos correctamente identificados. En el caso de esta investigación, la sensibilidad indicará la capacidad para detectar cáncer de mama en pacientes enfermos. La sensibilidad se calcula como:
+
+\begin{equation} \label{equation:Sensibilidad}
+	se = \frac{a}{a + c}
+\end{equation}
+
+La especificidad indica la capacidad del clasificador para dar como casos negativos los casos realmente negativos, esto es, la proporción de negativos correctamente identificados. En el caso de esta investigación, la especificidad indicará la capacidad para detectar la ausencia de  cáncer de mama en pacientes sanos. La especificidad se calcula como:
+
+\begin{equation} \label{equation:Especificidad}
+	es = \frac{d}{b + d}
+\end{equation}
+
+La precisión es la proporción de verdaderos entre los predichos como positivos. Se refiere a la dispersión del conjunto de valores obtenidos de mediciones repetidas de una magnitud. Cuanto menor es la dispersión mayor la precisión. La precisión se calcula como:
+
+\begin{equation} \label{equation:Especificidad}
+	precision = \frac{a}{a + b}
+\end{equation}
+
+Donde $a + b \neq 0$. \newline
+
+Recall es la proporción de verdaderos positivos predichos de entre todos los
+positivos, esto es, la fracción de instancias relevantes que han sido clasificadas. Recall se calcula como:
+
+\begin{equation} \label{equation:Especificidad}
+	recall = \frac{a}{a + c}
+\end{equation}
+
+Donde $a + c \neq 0$. Tanto la precisión como recall son entendidas como medidas de relevancia. \newline
+
+El indicador $F_{\beta}$ se considera como una media armónica que combina los valores de la precisión y de recall. De tal forma que:
+
+\begin{equation} \label{equation:Especificidad}
+	F_{\beta} = (1 + \beta^{2}) \frac{precision \times recall}{(\beta^{2}~precision) + recall}
+\end{equation}
+
+Si $\beta$ es igual a uno, se está dando la misma ponderación (o importancia) a $precision$ que a $recall$, si $\beta$ es mayor que uno se está dando más importancia a $recall$, mientras que si es menor que uno se está dando más importancia a la $precision$ que a $recall$. \newline
+
+
+\subsection{Resultados}
+Esta sección proporciona una discusión de los resultados y analisis del modelo de Regresión Lineal y el modelo Rectangular. Los clasificadores fueron implementados en Python. El modelo de Regresión Lineal utiliza la librería ``scikit-learn'' la cual proporciona un conjunto de herramientas para análisis de datos. El modelo Rectangular se implementó en Python. \newline
+
+La validación del modelo es la evaluación de la eficacia de un modelo entrenado que va a ser usado en la práctica. Hay múltiples maneras para conducir la validación de un modelo, el método más utilizado es el llamado método ``holdout''. Esta forma de validación es usada cuando es imposible o impráctico crear un nuevo conjunto de datos. Los datos son divididos en dos partes, donde una parte es usada para estimar los parámetros del modelo y la otra parte es usada para medir la capacidad de predicción del modelo. En esta investigación, los datos fueron divididos en un conjunto de entrenamiento y un conjunto de prueba. El conjunto de entrenamiento corresponde al 70\% (n=398) de los datos, mientras que el porcentaje restante correspondiente al 30\% (n=171) serán destinados al conjunto de prueba. Los datos de ambos conjuntos fueron divididos utilizando una función proporcionada por ``scikit-learn''. El Cuadro~\ref{table:ValoresConjuntoDatos} muestra un resumen de estos valores.
+
+\begin{table}[H]
+	\caption{Valores conjunto de datos}
+	\label{table:ValoresConjuntoDatos}
+	\begin{center}
+		\begin{tabular}{|l|c|}
+			\hline
+			\textbf{Nombre} &  Wisconsin Diagnostic Breast Cancer\\ \hline
+			\textbf{Dimensión} &  30 \\ \hline
+			\textbf{Instancias totales} &  569 \\ \hline
+			\textbf{Instancias en training set} &  398\\ \hline
+			\textbf{Instancias en testing set} &  171 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+El Cuadro~\ref{table:TiemposEjecucion} muestra los tiempos de ejecución para cada modelo. El modelo de Regresión Lineal tomó alrededor de 0.010694 segundos en el proceso de entrenamiento y luego 0.000068 segundos para clasificar los datos del conjunto de prueba. Por otro lado, el modelo Rectangular tomó alrededor de 0.050399 segundos en el proceso de entrenamiento y luego 0.072698 segundos para clasificar los datos del conjunto de prueba. Como se observa, el modelo Rectangular toma más tiempo en ambos procesos. Nótese que el modelo Rectangular toma más tiempo durante la clasificación de nuevos datos, a diferencia del modelo de Regresión Lineal que toma más tiempo durante el entrenamiento que durante la prueba.
+
+\begin{table}[H]
+	\caption{Tiempos de ejecución}
+	\label{table:TiemposEjecucion}
+	\begin{center}
+		\begin{tabular}{|l|c|}
+			\hline
+			\textbf{Nombre del modelo} &  Training/Prediction Time (seconds) \\ \hline
+			Regresión Lineal           &  0.010694s/0.000068s \\ \hline
+			Modelo Rectangular         &  0.050399s/0.072698s \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+Los Cuadros~\ref{table:MatrizConfusionRL} y \ref{table:MatrizConfusionMR} muestran las matrices de confusión para el modelo de Regresión Lineal y el modelo Rectangular respectivamente. Como se observa, en el Cuadro~\ref{table:MatrizConfusionRL}, de 63 casos benignos el modelo fue capaz de predecir 53 casos acertadamente y 10 casos erróneamente. De los 108 casos malignos, el modelo fue capaz de predecir los 108 casos acertadamente. En el caso del modelo Rectangular, ver Cuadro~\ref{table:MatrizConfusionMR}, de 63 casos benignos el modelo fue capaz de predecir 52 casos acertadamente y 11 casos erróneamente. De los 108 casos malignos, el modelo fue capaz de predecir 84 casos acertadamente y 24 casos erróneamente.
+
+\begin{table}[H]
+	\caption{Matriz de confusión Regresión Lineal}
+	\label{table:MatrizConfusionRL}
+	\begin{center}
+		\begin{tabular}{cc|c|c|}
+			\cline{3-4}
+            &  & \multicolumn{2}{c|}{\textbf{Clase verdadera}} \\ \cline{3-4} 
+            &  & \textit{Benigno}   & \textit{Maligno}   \\ \hline
+			\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{Clase predicha}}} & \textit{Benigno} & 53  & 0 \\ \cline{2-4} 
+			\multicolumn{1}{|c|}{} & \textit{Maligno} & 10 & 108 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[H]
+	\caption{Matriz de confusión Modelo Rectangular}
+	\label{table:MatrizConfusionMR}
+	\begin{center}
+		\begin{tabular}{cc|c|c|}
+			\cline{3-4}
+            &  & \multicolumn{2}{c|}{\textbf{Clase verdadera}} \\ \cline{3-4} 
+            &  & \textit{Benigno}   & \textit{Maligno}   \\ \hline
+			\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{Clase predicha}}} & \textit{Benigno} & 52 & 24 \\ \cline{2-4} 
+			\multicolumn{1}{|c|}{} & \textit{Maligno} & 11 & 84 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+El Cuadro~\ref{table:IndicadoresModelos} condensa un análisis comparativo de los dos modelos, es decir, del modelo de Regresión Lineal y del modelo Rectangular. Como se observa, el modelo Rectangular tiene un pobre desempeño comparado con el modelo de Regresión Lineal. \newline
+
+La probabilidad de clasificar incorrectamente nuevos casos en el modelo de Regresión Lineal es  0.0585 y en el modelo Rectangular es 0.2047. Por lo tanto, es más probable clasificar nuevos casos erróneamente si se utiliza el modelo Rectangular. \newline
+
+El modelo Rectangular clasifica con un error aparente de 0.1533 las mismas instancias de entrenamiento, a diferencia del modelo de Regresión Lineal que clasifica con un error de 0.0427. Es decir, el modelo Rectangular clasifica más casos erróneamente durante el entrenamiento. \newline
+
+La sensibilidad es también conocida como recall. Este indicador se refiere a la capacidad de detectar a pacientes enfermos que realmente tienen cáncer de mama. Como se observa, el modelo de Regresión Lineal clasifica mejor los casos positivos, que realmente son positivos, a diferencia del modelo Rectangular. \newline
+
+El modelo de Regresión Lineal es capaz de clasificar casos negativos, casos realmente negativos, con un 100\% de acierto, a diferencia del modelo Rectangular que sólo acierta con un 22\% de acierto. Es decir, pacientes sanos son clasificados como realmente sanos por el modelo de Regresión Lineal. \newline
+
+Por último, $F_{\beta}$ nos indica la medida de precisión de un modelo. Por lo tanto, el modelo de Regresión Lineal tiene una precisión de un 91\% y el modelo Rectangular tiene una precisión de un 74\%.
+
+\begin{table}[H]
+\caption{Indicadores para los modelos}
+\label{table:IndicadoresModelos}
+\begin{center}
+\begin{tabular}{c|c|c|}
+\cline{2-3}
+                                              & \textbf{Regresión Lineal} & \textbf{Modelo Rectangular} \\ \hline
+\multicolumn{1}{|c|}{\textbf{Error real}}     & 0.0585                    & 0.2047                      \\ \hline
+\multicolumn{1}{|c|}{\textbf{Error aparente}} & 0.0427                    & 0.1533                      \\ \hline
+\multicolumn{1}{|c|}{\textbf{Sensibilidad}}   & 0.8413                    & 0.8254                      \\ \hline
+\multicolumn{1}{|c|}{\textbf{Especificidad}}  & 1.0                       & 0.2222                      \\ \hline
+\multicolumn{1}{|c|}{\textbf{Recall}}         & 0.8413                    & 0.8254                      \\ \hline
+\multicolumn{1}{|c|}{\textbf{$F_{\beta}$}}    & 0.9138                    & 0.7482                      \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Se concluye que el modelo de Regresión Lineal tiene un mejor desempeño que el modelo Rectangular propuesto en esta investigación. Una de las razones posibles, es que el modelo de Regresión Lineal es capaz de separar de mejor manera el espacio, donde por un lado existen más casos benignos y por el otro lado de la línea existen más casos malignos. A diferencia, el modelo Rectangular divide el espacio en un rectángulo, entonces muchos de los casos que realmente son benignos quedan dentro del área del rectángulo, la cual indica que pertenecen a casos malignos. \newline
+
+Los resultados muestran como técnicas de Machine Learning pueden proporcionar indicadores que pueden ayudar a la selección de la mejor técnica de clasificación para mejorar el diagnóstico de cáncer de mama. \newline
+
+\section{Conclusión}
+El cáncer de mama es el más frecuente y es la principal causa de muerte en mujeres. Aún, cuando las tasas de incidencia global de cáncer en países menos desarrollados son la mitad de las encontradas en países más desarrollados, las tasas de mortalidad son similares. La sobrevida en cáncer es peor en países menos desarrollados, producto de la combinación de diagnósticos en etapas de enfermedad más avanzada, acceso limitado a tratamientos efectivos y en los tiempos adecuados. \newline
+
+La detección temprana de cáncer de mama puede ser predecida con un alto grado de precisión usando técnicas de Machine Learning. Esto puede resultar en la disminución del costo de prestaciones médicas y puede mejorar el tiempo en el cual un paciente reciba un tratamiento adecuado. \newline
+
+En esta investigación se ofreció un análisis comparativo entre el modelo de Regresión Lineal y el modelo Rectangular para proporcionar una forma de diagnosticar cáncer de mama. Se ha determinado que el modelo de Regresión Lineal es superior en todos los aspectos comparados al modelo Rectangular propuesto. El modelo de Regresión Lineal es capaz de separar de mejor manera el espacio, por lo tanto es capaz de diagnosticar de mejor forma nuevos pacientes. \newline
+
+La precisión de la predicción de los modelos seleccionados en esta investigación hace hincapié en la necesidad de emplear técnicas de Machine Learning no sólo en la predicción de datos de cáncer de mama, sino en otros dominios médicos en las que las predicciones de las condiciones son difíciles de diagnosticar. \newline
+
+Para finalizar, es deseable analizar detenidamente el modelo Rectangular para encontrar posibles mejoras al algoritmo. Siendo una de ellas, el análisis de las reglas encontradas con el objetivo de eliminar las reglas que no aporten al modelo o aquellas que sean redundantes. \newline
+
+
+\begin{thebibliography}{20}
+
+\bibitem{articule:Prieto2011}
+M. Prieto, \emph{Epidemiología del cáncer de mama en Chile.} \hskip 1em plus 0.5em minus 0.4em\relax Revista Médica Clínica Las Condes. 2011. URL: \url{http://www.clc.cl/clcprod/media/contenidos/pdf/MED_22_4/2_Dra_Marta_Prieto.pdf}
+
+\bibitem{articule:YouRumbe2010}
+H. You and G. Rumbe, \emph{Comparative Study of Classification Techniques on Breast Cancer FNA Biopsy Data.} \hskip 1em plus 0.5em minus 0.4em\relax International Journal of Artificial Intelligence and Interactive Multimedia, Volumén 1, Número 3. 2010. URL: \url{http://www.ijimai.org/journal/sites/default/files/IJIMAI20101_3_1.pdf}
+
+\bibitem{resource:WDBC1995}
+W. H. Wolberg, W. N. Street and O. L. Mangasarian, \emph{Wisconsin Diagnostic Breast Cancer.} \hskip 1em plus 0.5em minus 0.4em\relax November, 1995. URL: \url{http://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29}
+
+\bibitem{book:BishopPRML}
+C. M. Bishop, \emph{Pattern Recognition and Machine Learning.} \hskip 1em plus 0.5em minus 0.4em\relax Springer, 2007. ISBN: 0387310738
+
+\bibitem{class:MachineLearning}
+C. Meneses, \emph{Machine Learning.} \hskip 1em plus 0.5em minus 0.4em\relax Universidad Católica del Norte, 2014.
+
+\end{thebibliography}
+
+
+\end{document}

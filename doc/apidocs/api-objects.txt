@@ -1,0 +1,15 @@
+lib	lib-module.html
+lib.__package__	lib-module.html#__package__
+lib.fmetrics	lib.fmetrics-module.html
+lib.fmetrics.__package__	lib.fmetrics-module.html#__package__
+lib.rectangular_classifier	lib.rectangular_classifier-module.html
+lib.rectangular_classifier.__package__	lib.rectangular_classifier-module.html#__package__
+lib.fmetrics.FMetrics	lib.fmetrics.FMetrics-class.html
+lib.fmetrics.FMetrics.report	lib.fmetrics.FMetrics-class.html#report
+lib.fmetrics.FMetrics.apparent_error_rate	lib.fmetrics.FMetrics-class.html#apparent_error_rate
+lib.fmetrics.FMetrics.__init__	lib.fmetrics.FMetrics-class.html#__init__
+lib.rectangular_classifier.RectangularClassifier	lib.rectangular_classifier.RectangularClassifier-class.html
+lib.rectangular_classifier.RectangularClassifier.predict	lib.rectangular_classifier.RectangularClassifier-class.html#predict
+lib.rectangular_classifier.RectangularClassifier.__init__	lib.rectangular_classifier.RectangularClassifier-class.html#__init__
+lib.rectangular_classifier.RectangularClassifier._evaluate_rules	lib.rectangular_classifier.RectangularClassifier-class.html#_evaluate_rules
+lib.rectangular_classifier.RectangularClassifier.fit	lib.rectangular_classifier.RectangularClassifier-class.html#fit
